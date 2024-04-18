@@ -57,9 +57,6 @@ df = pd.read_excel(
 # Create FY Invoice filter
 st.sidebar.header(":point_down:Filter:")
 
-# 读取 Excel 数据
-df = pd.read_excel(io='C66_All_AR_Summary-new_version.xlsm', engine='openpyxl', sheet_name='Summary', skiprows=0, usecols='A:AE', nrows=20000)
-
 # 定义侧边栏过滤器并为每个过滤器创建相应的 DataFrame
 invoice_fy_filter = st.sidebar.multiselect("INVOICE_FY", df["INVOICE_FY"].unique(),default=["FY23/24"])
 df_invoice_fy = df[df["INVOICE_FY"].isin(invoice_fy_filter)]
