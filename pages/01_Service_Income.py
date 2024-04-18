@@ -165,7 +165,7 @@ tab1, tab2, tab3 ,tab4,tab5= st.tabs([":wedding: Overview",":earth_asia: Branch"
 with tab1:
 
 #LINE CHART of Overall Invoice Amount
-       st.subheader(":chart_with_upwards_trend: Invoice Amount Trend_:orange[FY to FY]:")
+       st.subheader(":chart_with_upwards_trend: 月份:orange[同比]:")
        InvoiceAmount_df2 = filtered_df.round(0).groupby(by = ["INVOICE_FY","INVOICE_FQ","INVOICE_MONTH"
                           ], as_index= False)["Functional Amount(HKD)"].sum()
 
