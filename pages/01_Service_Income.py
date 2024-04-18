@@ -47,7 +47,7 @@ st.markdown('<style>div.block-container{padding-top:1rem;}</style>',unsafe_allow
 #        st.dataframe(df)
 #唔show 17/18, cancel, tba資料
 #else:
-os.chdir(r"/Users/arthurchan/Downloads/Sample")
+#os.chdir(r"/Users/arthurchan/Downloads/Sample")
 #os.chdir(r"C:\Users\ArthurChan\OneDrive\VS Code\PythonProject_ESE\Sample Excel")
 
 df = pd.read_excel(
