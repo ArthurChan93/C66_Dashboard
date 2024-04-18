@@ -57,7 +57,7 @@ df = pd.read_excel(
 # Create FY Invoice filter
 st.sidebar.header(":point_down:Filter:")
 
-# 定义侧边栏过滤器并为每个过滤器创建相应的 DataFrame
+# Define sidebar filters and create corresponding DataFrames for each filter
 invoice_fy_filter = st.sidebar.multiselect("INVOICE_FY", df["INVOICE_FY"].unique(),default=["FY23/24"])
 df_invoice_fy = df[df["INVOICE_FY"].isin(invoice_fy_filter)]
 
@@ -79,9 +79,9 @@ df_type = df[df["TYPE"].isin(type_filter)]
 brand_filter = st.sidebar.multiselect("BRAND", df["BRAND"].unique())
 df_brand = df[df["BRAND"].isin(brand_filter)]
 
-# 处理不同的过滤组合
+# Handle different filter combinations
 if invoice_fy_filter and invoice_yr_filter and invoice_fq_filter and invoice_month_filter and branch_filter and type_filter and brand_filter:
-    # 所有过滤器都被选择
+    # All filters are selected
     filtered_df = df_invoice_fy[df_invoice_yr["INVOICE_YR"].isin(invoice_yr_filter)]
     filtered_df = filtered_df[filtered_df["INVOICE_FQ"].isin(invoice_fq_filter)]
     filtered_df = filtered_df[filtered_df["INVOICE_MONTH"].isin(invoice_month_filter)]
@@ -89,48 +89,48 @@ if invoice_fy_filter and invoice_yr_filter and invoice_fq_filter and invoice_mon
     filtered_df = filtered_df[filtered_df["TYPE"].isin(type_filter)]
     filtered_df = filtered_df[filtered_df["BRAND"].isin(brand_filter)]
 elif not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not branch_filter and not type_filter and not brand_filter:
-    # 没有过滤器被选择
+    # No filters are selected
     filtered_df = df
 else:
-    # 其他过滤器组合
-    filtered_df = pd.DataFrame(columns=df.columns)  # 创建空的 DataFrame
-    
+    # Other filter combinations
+    filtered_df = pd.DataFrame(columns=df.columns)  # Create an empty DataFrame
+
     if invoice_fy_filter:
-        filtered_df = filtered_df.append(df_invoice_fy)
+        filtered_df = pd.concat([filtered_df, df_invoice_fy])  # Use concat instead of append
     
     if invoice_yr_filter:
         if not invoice_fy_filter:
-            filtered_df = filtered_df.append(df_invoice_yr)
+            filtered_df = pd.concat([filtered_df, df_invoice_yr])
         else:
             filtered_df = filtered_df[filtered_df["INVOICE_YR"].isin(invoice_yr_filter)]
     
     if invoice_fq_filter:
         if not invoice_fy_filter and not invoice_yr_filter:
-            filtered_df = filtered_df.append(df_invoice_fq)
+            filtered_df = pd.concat([filtered_df, df_invoice_fq])
         else:
             filtered_df = filtered_df[filtered_df["INVOICE_FQ"].isin(invoice_fq_filter)]
     
     if invoice_month_filter:
         if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter:
-            filtered_df = filtered_df.append(df_invoice_month)
+            filtered_df = pd.concat([filtered_df, df_invoice_month])
         else:
             filtered_df = filtered_df[filtered_df["INVOICE_MONTH"].isin(invoice_month_filter)]
     
     if branch_filter:
         if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter:
-            filtered_df = filtered_df.append(df_branch)
+            filtered_df = pd.concat([filtered_df, df_branch])
         else:
             filtered_df = filtered_df[filtered_df["Branch"].isin(branch_filter)]
     
     if type_filter:
         if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not branch_filter:
-            filtered_df = filtered_df.append(df_type)
+            filtered_df = pd.concat([filtered_df, df_type])
         else:
             filtered_df = filtered_df[filtered_df["TYPE"].isin(type_filter)]
     
     if brand_filter:
         if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not branch_filter and not type_filter:
-            filtered_df = filtered_df.append(df_brand)
+            filtered_df = pd.concat([filtered_df, df_brand])
         else:
             filtered_df = filtered_df[filtered_df["BRAND"].isin(brand_filter)]
 
