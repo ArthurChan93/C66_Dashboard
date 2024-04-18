@@ -95,9 +95,8 @@ else:
     # 其他过滤器组合
     filtered_df = pd.DataFrame(columns=df.columns)  # 创建空的 DataFrame
     
-if invoice_fy_filter:
-    filtered_df = pd.DataFrame(columns=df.columns)
-    filtered_df = filtered_df.append(df_invoice_fy)
+    if invoice_fy_filter:
+        filtered_df = filtered_df.append(df_invoice_fy)
     
     if invoice_yr_filter:
         if not invoice_fy_filter:
