@@ -51,7 +51,7 @@ st.markdown('<style>div.block-container{padding-top:1rem;}</style>',unsafe_allow
 #os.chdir(r"C:\Users\ArthurChan\OneDrive\VS Code\PythonProject_ESE\Sample Excel")
 
 df = pd.read_excel(
-               io='C66_All_AR_Summary-new_version.xlsm',engine= 'openpyxl',sheet_name='Summary', skiprows=0, usecols='A:AE',nrows=20000,)
+               io='C66_All_AR_Summary-new_version.xlsm',engine= 'openpyxl',sheet_name='Summary', skiprows=0, usecols='A:AF',nrows=20000,)
 
 #Sidebar Filter
 # Create FY Invoice filter
@@ -70,6 +70,10 @@ df_invoice_fq = df[df["INVOICE_FQ"].isin(invoice_fq_filter)]
 invoice_month_filter = st.sidebar.multiselect("INVOICE_MONTH", df["INVOICE_MONTH"].unique())
 df_invoice_month = df[df["INVOICE_MONTH"].isin(invoice_month_filter)]
 
+# Add region filter
+region_filter = st.sidebar.multiselect("REGION", df["REGION"].unique())
+df_region = df[df["REGION"].isin(region_filter)]
+
 branch_filter = st.sidebar.multiselect("Branch", df["Branch"].unique())
 df_branch = df[df["Branch"].isin(branch_filter)]
 
@@ -80,15 +84,16 @@ brand_filter = st.sidebar.multiselect("BRAND", df["BRAND"].unique())
 df_brand = df[df["BRAND"].isin(brand_filter)]
 
 # Handle different filter combinations
-if invoice_fy_filter and invoice_yr_filter and invoice_fq_filter and invoice_month_filter and branch_filter and type_filter and brand_filter:
+if invoice_fy_filter and invoice_yr_filter and invoice_fq_filter and invoice_month_filter and region_filter and branch_filter and type_filter and brand_filter:
     # All filters are selected
     filtered_df = df_invoice_fy[df_invoice_yr["INVOICE_YR"].isin(invoice_yr_filter)]
     filtered_df = filtered_df[filtered_df["INVOICE_FQ"].isin(invoice_fq_filter)]
     filtered_df = filtered_df[filtered_df["INVOICE_MONTH"].isin(invoice_month_filter)]
+    filtered_df = filtered_df[filtered_df["REGION"].isin(region_filter)]
     filtered_df = filtered_df[filtered_df["Branch"].isin(branch_filter)]
     filtered_df = filtered_df[filtered_df["TYPE"].isin(type_filter)]
     filtered_df = filtered_df[filtered_df["BRAND"].isin(brand_filter)]
-elif not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not branch_filter and not type_filter and not brand_filter:
+elif not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not region_filter and not branch_filter and not type_filter and not brand_filter:
     # No filters are selected
     filtered_df = df
 else:
@@ -116,25 +121,30 @@ else:
         else:
             filtered_df = filtered_df[filtered_df["INVOICE_MONTH"].isin(invoice_month_filter)]
     
-    if branch_filter:
+    if region_filter:
         if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter:
+            filtered_df = pd.concat([filtered_df, df_region])
+        else:
+            filtered_df = filtered_df[filtered_df["REGION"].isin(region_filter)]
+    
+    if branch_filter:
+        if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not region_filter:
             filtered_df = pd.concat([filtered_df, df_branch])
         else:
             filtered_df = filtered_df[filtered_df["Branch"].isin(branch_filter)]
     
     if type_filter:
-        if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not branch_filter:
+        if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not region_filter and not branch_filter:
             filtered_df = pd.concat([filtered_df, df_type])
         else:
             filtered_df = filtered_df[filtered_df["TYPE"].isin(type_filter)]
     
     if brand_filter:
-        if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not branch_filter and not type_filter:
+        if not invoice_fy_filter and not invoice_yr_filter and not invoice_fq_filter and not invoice_month_filter and not region_filter and not branch_filter and not type_filter:
             filtered_df = pd.concat([filtered_df, df_brand])
         else:
             filtered_df = filtered_df[filtered_df["BRAND"].isin(brand_filter)]
 
-    
 ############################################################################################################################################################################################################        
 #Create tabs after overall summary
 
