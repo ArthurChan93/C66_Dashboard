@@ -59,10 +59,6 @@ with title_row3:
      st.image(resized_image2, use_column_width=False, output_format='PNG')
 
 
-
-
-
-
 #Move the title higher
 st.markdown('<style>div.block-container{padding-top:1rem;}</style>',unsafe_allow_html=True)
 
