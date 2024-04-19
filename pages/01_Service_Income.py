@@ -28,7 +28,7 @@ title_row1, title_row2, title_row3 = st.columns(3)
 #Title& #Text Credit
 with title_row1:
      st.title(':world_map: C66 Sales Dashboard')
-     st.write("by Arthur Chan123")
+     st.write("by Arthur Chan")
 
 #FIRST PIC
 #image_path = '/Users/arthurchan/Downloads/Sample/SERVICE.png'
