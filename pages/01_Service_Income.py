@@ -625,5 +625,5 @@ with tab3:
              df_pie.update_traces(textposition='outside', textinfo='label+percent', marker_line_width=2,opacity=1)
 # 在Streamlit中显示图表
              st.plotly_chart(df_pie, use_container_width=True)
-abc
+
 ###################################################################### 
