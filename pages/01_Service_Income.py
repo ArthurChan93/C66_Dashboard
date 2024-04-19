@@ -23,12 +23,45 @@ from streamlit.components.v1 import html
 #Webpage config& tab name& Icon
 st.set_page_config(page_title="Sales Dashboard",page_icon=":rainbow:",layout="wide")
 
-title_row1, title_row2, title_row3, title_row4 = st.columns(4)
+title_row1, title_row2, title_row3 = st.columns(3)
+
+#Title& #Text Credit
+with title_row1:
+     st.title(':world_map: C66 Sales Dashboard')
+     st.write("by Arthur Chan")
+
+#FIRST PIC
+#image_path = '/Users/arthurchan/Downloads/Sample/SERVICE.png'
+#image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
+image_path = 'SERVICE.png'
+image = Image.open(image_path)
+target_width = 600# 設置目標寬度和高度
+target_height = 300
+resized_image = image.resize((target_width, target_height))# 縮小圖片
+
+with title_row2:
+# 在Streamlit應用程式中顯示縮小後的圖片
+# 加載圖片
+     st.image(resized_image, use_column_width=False, output_format='PNG')
+
+#Second PIC
+#image_path2 = '/Users/arthurchan/Downloads/Sample/SERVICE2.png'
+#image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
+image_path2 = 'SERVICE2.png'
+image2 = Image.open(image_path2)
+target_width2 = 600# 設置目標寬度和高度
+target_height2 = 300
+resized_image2 = image2.resize((target_width2, target_height2))# 縮小圖片
+
+with title_row3:
+# 在Streamlit應用程式中顯示縮小後的圖片
+# 加載圖片
+     st.image(resized_image2, use_column_width=False, output_format='PNG')
 
 
-st.title(':world_map: C66 Sales Dashboard')
-#Text Credit
-st.write("by Arthur Chan")
+
+
+
 
 #Move the title higher
 st.markdown('<style>div.block-container{padding-top:1rem;}</style>',unsafe_allow_html=True)
@@ -156,9 +189,14 @@ button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p {
 }
 </style>
 """
+#Change the number of month into string
+filtered_df["INVOICE_MONTH"] = filtered_df["INVOICE_MONTH"].astype(str)
+#filtered_df["INVOICE_YR"] = filtered_df["INVOICE_YR"].astype(str)
+
+
 
 st.write(font_css, unsafe_allow_html=True)
-tab1, tab2, tab3 ,tab4,tab5= st.tabs([":wedding: Overview",":earth_asia: Branch",":blue_book: Invoice Details",":package: Brand",":handshake: Customer"])
+tab1, tab2, tab3 ,tab4,tab5= st.tabs([":wedding: Overview",":earth_asia: Branch",":hammer_and_wrench: Product Type",":package: Brand",":handshake: Customer"])
 
 #TAB 1: Overall category
 ################################################################################################################################################
@@ -166,9 +204,13 @@ with tab1:
 
 #LINE CHART of Overall Invoice Amount
        st.subheader(":chart_with_upwards_trend: 月份:orange[同比]:")
-       InvoiceAmount_df2 = filtered_df.round(0).groupby(by = ["INVOICE_FY","INVOICE_FQ","INVOICE_MONTH"
+       InvoiceAmount_df2 = filtered_df.round(0).groupby(by = ["INVOICE_FY","INVOICE_YR","INVOICE_FQ","INVOICE_MONTH"
                           ], as_index= False)["Functional Amount(HKD)"].sum()
 
+# 确保 "Inv Month" 列中的所有值都出现
+       sort_Month_order = ["4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3"]
+       InvoiceAmount_df2 = InvoiceAmount_df2.groupby(["INVOICE_FY", "INVOICE_MONTH"]).sum().reindex(pd.MultiIndex.from_product([InvoiceAmount_df2['INVOICE_FY'].unique(), sort_Month_order],
+                                   names=['INVOICE_FY','INVOICE_MONTH'])).fillna(0).reset_index()
        fig3 = go.Figure()
 # 添加每个INVOICE_FY的折线
        fy_inv_values = InvoiceAmount_df2['INVOICE_FY'].unique()
@@ -225,7 +267,7 @@ with tab2:
               df_contract_vs_invoice = px.bar(category2_df, x="INVOICE_FY", y="Functional Amount(HKD)", color="Branch", text_auto='.3s')
 
 # 更改顏色
-              colors = {"SZX": "orange","SHA": "lightblue","BJS": "Khaki","CTU": "lightgreen","XIY": "grey"}
+              colors = {"SZX": "orange","SHA": "lightblue","BJS": "Khaki","CTU": "lightgreen","XIY": "purple"}
               for trace in df_contract_vs_invoice.data:
                     Branch = trace.name.split("=")[-1]
                     trace.marker.color = colors.get(Branch, "blue")
@@ -240,16 +282,289 @@ with tab2:
 # 将图例放在底部
               df_contract_vs_invoice.update_layout(legend=dict(orientation="h",font=dict(size=14), yanchor="bottom", y=1.03, xanchor="right", x=1))
               st.plotly_chart(df_contract_vs_invoice, use_container_width=True) 
-##############################################################################################################################          
-# LINE CHART of Regional Comparision
+
+#All Region PIE CHART
         with two_column:
-              st.subheader(":chart_with_upwards_trend: Invoice Amount Trend_:orange[All Branch in one]:")
-              InvoiceAmount_df2 = filtered_df.round(0).groupby(by = ["INVOICE_FQ","Branch"], as_index= False)["Functional Amount(HKD)"].sum()
+             st.subheader(":round_pushpin: Invoice Percentage_:orange[Accumulate]:")
+# 创建示例数据框
+             brand_data = filtered_df.round(0).groupby(by=["INVOICE_FY","Branch"],
+                     as_index=False)["Functional Amount(HKD)"].sum().sort_values(by="Functional Amount(HKD)", ascending=False)         
+             brandinvpie_df = pd.DataFrame(brand_data)
+# 按照指定順序排序 
+             brandinvpie_df["Branch"] = brandinvpie_df["Branch"].replace(to_replace=[x for x in brandinvpie_df["Branch"
+                                       ].unique() if x not in ["SZX","SHA", "BJS", "XIY", "CTU"]], value="OTHERS")
+             brandinvpie_df["Branch"] = pd.Categorical(brandinvpie_df["Branch"], ["SZX","SHA", "BJS", "XIY", "CTU","OTHERS"])
+# 创建饼状图
+             df_pie = px.pie(brandinvpie_df, values="Functional Amount(HKD)", names="Branch", color="Branch", color_discrete_map={
+                      "SHA": "lightblue", "SZX": "orange", "CTU": "lightgreen","BJS": "khaki", "XIY":"purple"})
+# 设置字体和样式
+             df_pie.update_layout(
+                   font=dict(family="Arial", size=14, color="black"),
+                   legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+# 显示百分比标签
+             df_pie.update_traces(textposition='outside', textinfo='label+percent', marker_line_width=2,opacity=1)
+# 在Streamlit中显示图表
+             st.plotly_chart(df_pie, use_container_width=True)
+             
+              
+##############################################################################################################################                   
+        tab2row2one_column, tab2row2two_column= st.columns(2)
+        with tab2row2one_column:
+# LINE CHART of SOUTH CHINA FY/FY
+              st.divider()
+              st.subheader(":chart_with_upwards_trend: :orange[SOUTH CHINA] Inv Amt Trend_FQ(Available to Show :orange[Multiple FY]):")
+              df_Single_south = filtered_df.query('REGION == "SOUTH"').round(0).groupby(by = ["INVOICE_FY",
+                                 "INVOICE_MONTH"], as_index= False)["Functional Amount(HKD)"].sum()
+# 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
+              all_fq_invoice_values = ["4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3"]
+              df_Single_south = df_Single_south.groupby(["INVOICE_FY", "INVOICE_MONTH"]).sum().reindex(pd.MultiIndex.from_product([df_Single_south['INVOICE_FY'].unique(), all_fq_invoice_values],
+                                   names=['INVOICE_FY', 'INVOICE_MONTH'])).fillna(0).reset_index()
+              fig4 = go.Figure()
+
+# 添加每个INVOICE_FY的折线
+              fy_inv_values = df_Single_south['INVOICE_FY'].unique()
+              for fy_inv in fy_inv_values:
+               fy_inv_data = df_Single_south[df_Single_south['INVOICE_FY'] == fy_inv]
+               fig4.add_trace(go.Scatter(
+                          x=fy_inv_data['INVOICE_MONTH'],
+                          y=fy_inv_data['Functional Amount(HKD)'],
+                          mode='lines+markers+text',
+                          name=fy_inv,
+                          text=fy_inv_data['Functional Amount(HKD)'],
+                          textposition="bottom center",
+                          texttemplate='%{text:.3s}',
+                          hovertemplate='%{x}<br>%{y:.2f}',
+                          marker=dict(size=10)))
+               fig4.update_layout(xaxis=dict(
+                          type='category',
+                          categoryorder='array',
+                          categoryarray=all_fq_invoice_values),
+                          yaxis=dict(showticklabels=True),
+                          font=dict(family="Arial, Arial", size=12, color="Black"),
+                          hovermode='x', showlegend=True,
+                          legend=dict(orientation="h",font=dict(size=14)),paper_bgcolor='rgba(255,165,0,0.3)')
+             
+              fig4.update_layout(legend=dict(orientation="h",font=dict(size=14), yanchor="bottom", y=1.02, xanchor="right", x=1))
+
+              st.plotly_chart(fig4.update_layout(yaxis_showticklabels = True), use_container_width=True)           
+#SOUTH Region Invoice Details FQ_FQ:
+              pvt8 = filtered_df.query('REGION == "SOUTH"').round(0).pivot_table(values="Functional Amount(HKD)",
+                     index=['INVOICE_FY'],columns=["INVOICE_FQ"],aggfunc="sum",fill_value=0, margins=True,margins_name="Total").sort_values(by='INVOICE_FY',ascending=True)
+            
+              html76 = pvt8.applymap('HKD{:,.0f}'.format).to_html(classes='table table-bordered', justify='center')
+             # 把total值的那行的背景顏色設為黃色，並將字體設為粗體
+              html77 = html76.replace('<tr>\n      <th>Total</th>', '<tr style="background-color: yellow;">\n      <th style="font-weight: bold;">Total</th>')
+             #改column color
+              html78 = html77.replace('<th>Q1</th>', '<th style="background-color: orange">Q1</th>')
+              html79 = html78.replace('<th>Q2</th>', '<th style="background-color: orange">Q2</th>')
+              html80 = html79.replace('<th>Q3</th>', '<th style="background-color: orange">Q3</th>')
+              html81 = html80.replace('<th>Q4</th>', '<th style="background-color: orange">Q4</th>')
+              html822 = html81.replace('<th>Total</th>', '<th style="background-color: yellow">Total</th>')
+# 放大pivot table
+              html833 = f'<div style="zoom: 0.7;">{html822}</div>'
+
+              st.markdown(html833, unsafe_allow_html=True)
+# 使用streamlit的download_button方法提供一個下載數據框為CSV檔的按鈕
+              csv11 = pvt8.to_csv(index=True,float_format='{:,.0f}'.format).encode('utf-8')
+              st.download_button(label='Download Table', data=csv11, file_name='South_Sales.csv', mime='text/csv')
+              st.divider()
+
+ 
+ 
+        with tab2row2two_column:
+# LINE CHART of EAST CHINA FY/FY
+              st.divider()
+              st.subheader(":chart_with_upwards_trend: :orange[EAST CHINA] Inv Amt Trend_FQ(Available to Show :orange[Multiple FY)]:")
+              df_Single_region = filtered_df.query('REGION == "EAST"').round(0).groupby(by = ["INVOICE_FY","INVOICE_MONTH"], as_index= False)["Functional Amount(HKD)"].sum()
+# 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
+              all_fq_invoice_values = ["4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3"]
+              df_Single_region = df_Single_region.groupby(["INVOICE_FY", "INVOICE_MONTH"]).sum().reindex(pd.MultiIndex.from_product([df_Single_region['INVOICE_FY'].unique(), all_fq_invoice_values],
+                                   names=['INVOICE_FY', 'INVOICE_MONTH'])).fillna(0).reset_index()
+              fig5 = go.Figure()
+
+# 添加每个FY_INV的折线
+              fy_inv_values = df_Single_region['INVOICE_FY'].unique()
+              for fy_inv in fy_inv_values:
+               fy_inv_data = df_Single_region[df_Single_region['INVOICE_FY'] == fy_inv]
+               fig5.add_trace(go.Scatter(
+                          x=fy_inv_data['INVOICE_MONTH'],
+                          y=fy_inv_data['Functional Amount(HKD)'],
+                          mode='lines+markers+text',
+                          name=fy_inv,
+                          text=fy_inv_data['Functional Amount(HKD)'],
+                          textposition="bottom center",
+                          texttemplate='%{text:.2s}',
+                          hovertemplate='%{x}<br>%{y:.2f}',
+                          marker=dict(size=10)))
+               fig5.update_layout(xaxis=dict(
+                          type='category',
+                          categoryorder='array',
+                          categoryarray=all_fq_invoice_values),
+                          yaxis=dict(showticklabels=True),
+                          font=dict(family="Arial, Arial", size=12, color="Black"),
+                          hovermode='x', showlegend=True,
+                          legend=dict(orientation="h",font=dict(size=14)),
+                          paper_bgcolor='rgba(0,150,255,0.1)')
+             
+              fig5.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+              st.plotly_chart(fig5.update_layout(yaxis_showticklabels = True), use_container_width=True)
+
+########################             
+#EAST Region Invoice Details FQ_FQ:
+              pvt9 = filtered_df.query('REGION == "EAST"').round(0).pivot_table(values="Functional Amount(HKD)",index=['INVOICE_FY'],columns=["INVOICE_FQ"],
+                            aggfunc="sum",fill_value=0, margins=True,margins_name="Total").sort_values(by='INVOICE_FY',ascending=True)
+            
+              html83 = pvt9.applymap('HKD{:,.0f}'.format).to_html(classes='table table-bordered', justify='center')
+             # 把total值的那行的背景顏色設為黃色，並將字體設為粗體
+              html84 = html83.replace('<tr>\n      <th>Total</th>', '<tr style="background-color: yellow;">\n      <th style="font-weight: bold;">Total</th>')
+             #改column color
+              html85 = html84.replace('<th>Q1</th>', '<th style="background-color: lightblue">Q1</th>')
+              html86 = html85.replace('<th>Q2</th>', '<th style="background-color: lightblue">Q2</th>')
+              html87 = html86.replace('<th>Q3</th>', '<th style="background-color: lightblue">Q3</th>')
+              html88 = html87.replace('<th>Q4</th>', '<th style="background-color: lightblue">Q4</th>')
+              html89 = html88.replace('<th>Total</th>', '<th style="background-color: yellow">Total</th>')
+# 放大pivot table
+              html900 = f'<div style="zoom: 0.7;">{html89}</div>'
+             
+              st.markdown(html900, unsafe_allow_html=True)
+# 使用streamlit的download_button方法提供一個下載數據框為CSV檔的按鈕
+              csv12 = pvt9.to_csv(index=True,float_format='{:,.0f}'.format).encode('utf-8')
+              st.download_button(label='Download Table', data=csv12, file_name='East_Sales.csv', mime='text/csv')
+
+              st.divider()
+################################################# 
+        three_column, four_column= st.columns(2)
+  
+        with three_column:
+# LINE CHART of NORTH CHINA FY/FY
+             st.subheader(":chart_with_upwards_trend: :orange[NORTH CHINA] Inv Amt Trend_FQ(Available to Show :orange[Multiple FY]):")
+
+             df_Single_north = filtered_df.query('REGION == "NORTH"').round(0).groupby(by=["INVOICE_FY", "INVOICE_MONTH"],
+                                as_index=False)["Functional Amount(HKD)"].sum()
+# 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
+             all_fq_invoice_values = ["4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3"]
+             df_Single_north = df_Single_north.groupby(["INVOICE_FY", "INVOICE_MONTH"]).sum().reindex(pd.MultiIndex.from_product([df_Single_north['INVOICE_FY'].unique(), all_fq_invoice_values],
+                               names=['INVOICE_FY', 'INVOICE_MONTH'])).fillna(0).reset_index()
+             fig7 = go.Figure()
+
+# 添加每个INVOICE_FY的折线
+             fy_inv_values = df_Single_north['INVOICE_FY'].unique()
+             for fy_inv in fy_inv_values:
+               fy_inv_data = df_Single_north[df_Single_north['INVOICE_FY'] == fy_inv]
+               fig7.add_trace(go.Scatter(
+                          x=fy_inv_data['INVOICE_MONTH'],
+                          y=fy_inv_data['Functional Amount(HKD)'],
+                          mode='lines+markers+text',
+                          name=fy_inv,
+                          text=fy_inv_data['Functional Amount(HKD)'],
+                          textposition="bottom center",
+                          texttemplate='%{text:.3s}',
+                          hovertemplate='%{x}<br>%{y:.2f}',
+                          marker=dict(size=10)))
+               fig7.update_layout(xaxis=dict(
+                          type='category',
+                          categoryorder='array',
+                          categoryarray=all_fq_invoice_values),
+                          yaxis=dict(showticklabels=True),
+                          font=dict(family="Arial, Arial", size=12, color="Black"),
+                          hovermode='x', showlegend=True,
+                          legend=dict(orientation="h",font=dict(size=14)),
+                          paper_bgcolor='khaki')
+              
+             fig7.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+             st.plotly_chart(fig7.update_layout(yaxis_showticklabels = True), use_container_width=True)
+
+#NORTH Region Invoice Details FQ_FQ:
+             pvt10 = filtered_df.query('REGION == "NORTH"').round(0).pivot_table(values="Functional Amount(HKD)",index=['INVOICE_FY'],columns=["INVOICE_FQ"],
+                     aggfunc="sum",fill_value=0, margins=True,margins_name="Total").sort_values(by='INVOICE_FY',ascending=True)
+
+             html62 = pvt10.applymap('HKD{:,.0f}'.format).to_html(classes='table table-bordered', justify='center')
+             # 把total值的那行的背景顏色設為黃色，並將字體設為粗體
+             html63 = html62.replace('<tr>\n      <th>Total</th>', '<tr style="background-color: yellow;">\n      <th style="font-weight: bold;">Total</th>')
+             #改column color
+             html64 = html63.replace('<th>Q1</th>', '<th style="background-color: khaki">Q1</th>')
+             html65 = html64.replace('<th>Q2</th>', '<th style="background-color: khaki">Q2</th>')
+             html66 = html65.replace('<th>Q3</th>', '<th style="background-color: khaki">Q3</th>')
+             html67 = html66.replace('<th>Q4</th>', '<th style="background-color: khaki">Q4</th>')
+             html68 = html67.replace('<th>Total</th>', '<th style="background-color: yellow">Total</th>')
+
+# 放大pivot table
+             html699 = f'<div style="zoom: 0.7;">{html68}</div>'
+             st.markdown(html699, unsafe_allow_html=True)
+# 使用streamlit的download_button方法提供一個下載數據框為CSV檔的按鈕
+             csv9 = pvt10.to_csv(index=True,float_format='{:,.0f}'.format).encode('utf-8')
+             st.download_button(label='Download Table', data=csv9, file_name='North_Sales.csv', mime='text/csv')
+
+             st.divider()
+##################################################
+        with four_column:
+# LINE CHART of WEST CHINA FY/FY
+             st.subheader(":chart_with_upwards_trend: :orange[WEST CHINA] Inv Amt Trend_FQ(Available to Show :orange[Multiple FY]):")
+             df_Single_west = filtered_df.query('REGION == "WEST"').round(0).groupby(by=["INVOICE_FY", "INVOICE_MONTH"],
+                                as_index=False)["Functional Amount(HKD)"].sum()
+# 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
+             all_fq_invoice_values = ["4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3"]
+             df_Single_west = df_Single_west.groupby(["INVOICE_FY", "INVOICE_MONTH"]).sum().reindex(pd.MultiIndex.from_product([df_Single_west['INVOICE_FY'].unique(), all_fq_invoice_values],
+                               names=['INVOICE_FY', 'INVOICE_MONTH'])).fillna(0).reset_index()
+             fig6 = go.Figure()
+
+# 添加每个FY_INV的折线
+             fy_inv_values = df_Single_west['INVOICE_FY'].unique()
+             for fy_inv in fy_inv_values:
+               fy_inv_data = df_Single_west[df_Single_west['INVOICE_FY'] == fy_inv]
+               fig6.add_trace(go.Scatter(
+                          x=fy_inv_data['INVOICE_MONTH'],
+                          y=fy_inv_data['Functional Amount(HKD)'],
+                          mode='lines+markers+text',
+                          name=fy_inv,
+                          text=fy_inv_data['Functional Amount(HKD)'],
+                          textposition="bottom center",
+                          texttemplate='%{text:.3s}',
+                          hovertemplate='%{x}<br>%{y:.2f}',
+                          marker=dict(size=10)))
+               fig6.update_layout(xaxis=dict(
+                          type='category',
+                          categoryorder='array',
+                          categoryarray=all_fq_invoice_values),
+                          yaxis=dict(showticklabels=True),
+                          font=dict(family="Arial, Arial", size=12, color="Black"),
+                          hovermode='x', showlegend=True,
+                          legend=dict(orientation="h",font=dict(size=14)),
+                          paper_bgcolor='lightgreen')
+              
+             fig6.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+             st.plotly_chart(fig6.update_layout(yaxis_showticklabels = True), use_container_width=True)
+#WEST Region Invoice Details FQ_FQ:
+             pvt18 = filtered_df.query('REGION == "WEST"').round(0).pivot_table(values="Functional Amount(HKD)",index=['INVOICE_FY'],columns=["INVOICE_FQ"],
+                            aggfunc="sum",fill_value=0, margins=True,margins_name="Total").sort_values(by='INVOICE_FY',ascending=True)
+            
+             html69 = pvt18.applymap('HKD{:,.0f}'.format).to_html(classes='table table-bordered', justify='center')
+             # 把total值的那行的背景顏色設為黃色，並將字體設為粗體
+             html70 = html69.replace('<tr>\n      <th>Total</th>', '<tr style="background-color: yellow;">\n      <th style="font-weight: bold;">Total</th>')
+             #改column color
+             html71 = html70.replace('<th>Q1</th>', '<th style="background-color: lightgreen">Q1</th>')
+             html72 = html71.replace('<th>Q2</th>', '<th style="background-color: lightgreen">Q2</th>')
+             html73 = html72.replace('<th>Q3</th>', '<th style="background-color: lightgreen">Q3</th>')
+             html74 = html73.replace('<th>Q4</th>', '<th style="background-color: lightgreen">Q4</th>')
+             html75 = html74.replace('<th>Total</th>', '<th style="background-color: lightgreen">Total</th>')
+# 放大pivot table
+             html766 = f'<div style="zoom: 0.7;">{html75}</div>'
+
+             st.markdown(html766, unsafe_allow_html=True)
+# 使用streamlit的download_button方法提供一個下載數據框為CSV檔的按鈕
+             csv10 = pvt18.to_csv(index=True,float_format='{:,.0f}'.format).encode('utf-8')
+             st.download_button(label='Download Table', data=csv10, file_name='West_Sales.csv', mime='text/csv')
+             st.divider()
+
+            
+# LINE CHART of Regional Comparision              
+        st.subheader(":chart_with_upwards_trend: Invoice Amount Trend_:orange[All Branch in one]:")
+        InvoiceAmount_df2 = filtered_df.round(0).groupby(by = ["INVOICE_FQ","Branch"], as_index= False)["Functional Amount(HKD)"].sum()
         # 使用pivot_table函數來重塑數據，使每個Region成為一個列
-              InvoiceAmount_df2 = InvoiceAmount_df2.pivot_table(index="INVOICE_FQ", columns="Branch", values="Functional Amount(HKD)", fill_value=0).reset_index()
+        InvoiceAmount_df2 = InvoiceAmount_df2.pivot_table(index="INVOICE_FQ", columns="Branch", values="Functional Amount(HKD)", fill_value=0).reset_index()
         # 使用melt函數來恢復原來的長格式，並保留0值
-              InvoiceAmount_df2 = InvoiceAmount_df2.melt(id_vars="INVOICE_FQ", value_name="Functional Amount(HKD)", var_name="Branch")
-              fig2 = px.line(InvoiceAmount_df2,
+        InvoiceAmount_df2 = InvoiceAmount_df2.melt(id_vars="INVOICE_FQ", value_name="Functional Amount(HKD)", var_name="Branch")
+        fig2 = px.line(InvoiceAmount_df2,
                        x = "INVOICE_FQ",
                        y = "Functional Amount(HKD)",
                        color='Branch',
@@ -258,10 +573,62 @@ with tab2:
                        color_discrete_map={'SZX': 'orange','SHA': 'lightblue',
                                            'BJS': 'Khaki','CTU': 'lightgreen','XIY': 'grey'})
               # 更新圖表的字體大小和粗細
-              fig2.update_layout(font=dict(
+        fig2.update_layout(font=dict(
                     family="Arial, Arial",
                     size=12,
                     color="Black"))
-              fig2.update_layout(legend=dict(orientation="h",font=dict(size=14), yanchor="bottom", y=1.02, xanchor="right", x=1))
-              fig2.update_traces(marker_size=9, textposition="bottom center", texttemplate='%{text:.2s}')
-              st.plotly_chart(fig2.update_layout(yaxis_showticklabels = True), use_container_width=True)
+        fig2.update_layout(legend=dict(orientation="h",font=dict(size=14), yanchor="bottom", y=1.02, xanchor="right", x=1))
+        fig2.update_traces(marker_size=9, textposition="bottom center", texttemplate='%{text:.2s}')
+        st.plotly_chart(fig2.update_layout(yaxis_showticklabels = True), use_container_width=True)
+#######################################################################################################################################
+with tab3:
+        tab3one_column, tab3two_column= st.columns(2)
+        with tab3one_column:
+#All Regional total inv amount BAR CHART
+              st.subheader(":bar_chart: Invoice Amount_:orange[FY](Available to show :orange[Multiple FY]):")
+              category2_df = filtered_df.round(0).groupby(by=["INVOICE_FY","TYPE"], 
+                       as_index=False)["Functional Amount(HKD)"].sum().sort_values(by="Functional Amount(HKD)", ascending=False)
+              df_contract_vs_invoice = px.bar(category2_df, x="INVOICE_FY", y="Functional Amount(HKD)", color="TYPE", text_auto='.3s')
+
+# 更改顏色
+              colors = {"SPARES/OTHER": "pink","FEEDER": "blue","SERVICE_CHARGE": "yellow","CONTRACT_FEE": "lightgreen"}
+              for trace in df_contract_vs_invoice.data:
+                    Branch = trace.name.split("=")[-1]
+                    trace.marker.color = colors.get(Branch, "blue")
+
+# 更改字體
+              df_contract_vs_invoice.update_layout(font=dict(family="Arial", size=14))
+              df_contract_vs_invoice.update_traces(marker_line_color='black', marker_line_width=2,opacity=1)
+
+# 將barmode設置為"group"以顯示多條棒形圖
+              df_contract_vs_invoice.update_layout(barmode='group')
+
+# 将图例放在底部
+              df_contract_vs_invoice.update_layout(legend=dict(orientation="h",font=dict(size=14), yanchor="bottom", y=1.03, xanchor="right", x=1))
+              st.plotly_chart(df_contract_vs_invoice, use_container_width=True) 
+
+#All Region PIE CHART
+        with tab3two_column:
+             st.subheader(":round_pushpin: Invoice Percentage_:orange[Accumulate]:")
+# 创建示例数据框
+             brand_data = filtered_df.round(0).groupby(by=["INVOICE_FY","TYPE"],
+                     as_index=False)["Functional Amount(HKD)"].sum().sort_values(by="Functional Amount(HKD)", ascending=False)         
+             brandinvpie_df = pd.DataFrame(brand_data)
+# 按照指定順序排序 
+             brandinvpie_df["TYPE"] = brandinvpie_df["TYPE"].replace(to_replace=[x for x in brandinvpie_df["TYPE"
+                                       ].unique() if x not in ["SPARES/OTHER","FEEDER", "SERVICE_CHARGE", "CONTRACT_FEE"]], value="OTHERS")
+             brandinvpie_df["TYPE"] = pd.Categorical(brandinvpie_df["TYPE"], ["SPARES/OTHER","FEEDER", "SERVICE_CHARGE", "CONTRACT_FEE","OTHERS"])
+# 创建饼状图
+             df_pie = px.pie(brandinvpie_df, values="Functional Amount(HKD)", names="TYPE", color="TYPE", color_discrete_map={
+                      "SPARES/OTHER": "pink","FEEDER": "blue","SERVICE_CHARGE": "yellow","CONTRACT_FEE": "lightgreen"})
+# 设置字体和样式
+             df_pie.update_layout(
+                   font=dict(family="Arial", size=14, color="black"),
+                   legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+# 显示百分比标签
+             df_pie.update_traces(textposition='outside', textinfo='label+percent', marker_line_width=2,opacity=1)
+# 在Streamlit中显示图表
+             st.plotly_chart(df_pie, use_container_width=True)
+             
+              
+##############################################################################################################################  
