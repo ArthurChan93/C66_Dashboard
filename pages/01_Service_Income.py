@@ -196,7 +196,7 @@ tab1, tab2, tab3 ,tab4,tab5= st.tabs([":wedding: Overview",":earth_asia: Branch"
 
 #TAB 1: Overall category
 ################################################################################################################################################
-with tab1:
+with tab1
 
 #LINE CHART of Overall Invoice Amount
        st.subheader(":chart_with_upwards_trend: 月份:orange[同比]:")
