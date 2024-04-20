@@ -47,16 +47,16 @@ with title_row2:
 #Second PIC
 #image_path2 = '/Users/arthurchan/Downloads/Sample/SERVICE2.png'
 #image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
-#image_path2 = 'SERVICE2.png'
-#image2 = Image.open(image_path2)
-#target_width2 = 600# 設置目標寬度和高度
-#target_height2 = 300
-#resized_image2 = image2.resize((target_width2, target_height2))# 縮小圖片
+image_path2 = 'SERVICE2.png'
+image2 = Image.open(image_path2)
+target_width2 = 600# 設置目標寬度和高度
+target_height2 = 300
+resized_image2 = image2.resize((target_width2, target_height2))# 縮小圖片
 
-#with title_row3:
+with title_row3:
 # 在Streamlit應用程式中顯示縮小後的圖片
 # 加載圖片
-#     st.image(resized_image2, use_column_width=False, output_format='PNG')
+     st.image(resized_image2, use_column_width=False, output_format='PNG')
 
 
 #Move the title higher
