@@ -33,8 +33,8 @@ with title_row1:
 #FIRST PIC
 #image_path = '/Users/arthurchan/Downloads/Sample/SERVICE.png'
 #image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
-#image_path = 'SERVICE.png'
-#image = Image.open(image_path)
+image_path = 'SERVICE.png'
+image = Image.open(image_path)
 #target_width = 600 #設置目標寬度和高度
 #target_height = 300
 #resized_image = image.resize((target_width, target_height))# 縮小圖片
@@ -42,7 +42,7 @@ with title_row1:
 with title_row2:
 # 在Streamlit應用程式中顯示縮小後的圖片
 # 加載圖片
-#     st.image(resized_image, use_column_width=False, output_format='PNG')
+     st.image(resized_image, use_column_width=False, output_format='PNG')
 
 #Second PIC
 #image_path2 = '/Users/arthurchan/Downloads/Sample/SERVICE2.png'
@@ -53,7 +53,7 @@ with title_row2:
 #target_height2 = 300
 #resized_image2 = image2.resize((target_width2, target_height2))# 縮小圖片
 
-with title_row3:
+#with title_row3:
 # 在Streamlit應用程式中顯示縮小後的圖片
 # 加載圖片
 #     st.image(resized_image2, use_column_width=False, output_format='PNG')
