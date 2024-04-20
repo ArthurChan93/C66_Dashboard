@@ -45,7 +45,7 @@ with title_row2:
      st.image(resized_image, use_column_width=False, output_format='PNG')
 
 #Second PIC
-#image_path2 = '/Users/arthurchan/Downloads/Sample/SERVICE2.png'
+image_path2 = '/Users/arthurchan/Downloads/Sample/SERVICE2.png'
 #image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
 image_path2 = 'SERVICE2.png'
 image2 = Image.open(image_path2)
