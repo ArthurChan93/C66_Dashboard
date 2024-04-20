@@ -35,8 +35,8 @@ with title_row1:
 #image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
 image_path = 'SERVICE.png'
 image = Image.open(image_path)
-target_width = 600 #設置目標寬度和高度
-target_height = 300
+#target_width = 600 #設置目標寬度和高度
+#target_height = 300
 resized_image = image.resize((target_width, target_height))# 縮小圖片
 
 with title_row2:
@@ -49,8 +49,8 @@ with title_row2:
 #image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
 image_path2 = 'SERVICE2.png'
 image2 = Image.open(image_path2)
-target_width2 = 600# 設置目標寬度和高度
-target_height2 = 300
+#target_width2 = 600# 設置目標寬度和高度
+#target_height2 = 300
 resized_image2 = image2.resize((target_width2, target_height2))# 縮小圖片
 
 with title_row3:
