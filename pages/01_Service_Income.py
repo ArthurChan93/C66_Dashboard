@@ -33,7 +33,7 @@ with title_row1:
 #FIRST PIC
 #image_path = '/Users/arthurchan/Downloads/Sample/SERVICE.png'
 #image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
-#image_path = 'SERVICE.png'
+image_path = 'SERVICE.png'
 image = Image.open(image_path)
 target_width = 600# 設置目標寬度和高度
 target_height = 300
@@ -47,7 +47,7 @@ with title_row2:
 #Second PIC
 #image_path2 = '/Users/arthurchan/Downloads/Sample/SERVICE2.png'
 #image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
-#image_path2 = 'SERVICE2.png'
+image_path2 = 'SERVICE2.png'
 image2 = Image.open(image_path2)
 target_width2 = 600# 設置目標寬度和高度
 target_height2 = 300
