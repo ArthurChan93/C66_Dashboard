@@ -35,9 +35,9 @@ with title_row1:
 #image_path = "/Users/ArthurChan/OneDrive/VS Code/PythonProject_ESE/SERVICE.png"
 image_path = 'SERVICE.png'
 image = Image.open(image_path)
-#target_width = 600 #設置目標寬度和高度
-#target_height = 300
-#resized_image = image.resize((target_width, target_height))# 縮小圖片
+target_width = 600 #設置目標寬度和高度
+target_height = 300
+resized_image = image.resize((target_width, target_height))# 縮小圖片
 
 with title_row2:
 # 在Streamlit應用程式中顯示縮小後的圖片
