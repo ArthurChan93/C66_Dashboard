@@ -4,6 +4,7 @@ import yaml #pip install yaml
 from yaml.loader import SafeLoader
 import os
 # pip install pipreqs -->再去 terminal 入pipreqs
+
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="streamlit Dashboard", page_icon=":bar_chart:", layout="wide")#
 #Move the title higher
@@ -44,7 +45,7 @@ authenticator = stauth.Authenticate(
     config['preauthorized']
 )
 
-name, authentication_status, username = authenticator.login(':closed_lock_with_key: SMT Sales Dashboard Login', 'main')
+name, authentication_status, username = authenticator.login(':closed_lock_with_key: SMT C66 Dashboard Login', 'main')
 
 if authentication_status == False:
     st.error('Username/password is incorrect')
