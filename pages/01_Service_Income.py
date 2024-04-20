@@ -1223,7 +1223,7 @@ with tab5:
       left_column, right_column= st.columns(2)
 #BAR CHART Customer List
       with left_column:
-             st.subheader(":radio: Top 20 Customer_:blue[Inv Amt]:")            
+             st.subheader(":trophy: Top 20 Customer_:blue[Inv Amt]:")            
              customer_line = (filtered_df.groupby(
                              by=["Enduser"])[["Functional Amount(HKD)"]].sum().sort_values(by="Functional Amount(HKD)", ascending=False).head(20))
 # 生成颜色梯度
@@ -1253,22 +1253,20 @@ with tab5:
                   )
              # 显示图表
              st.plotly_chart(fig_customer, use_container_width=True)
-
-# PIE CHART Customer Type
-with right_column:
-    st.subheader(":radio: Top 20 Customer Type Percentage:")
-    customer_type_data = (filtered_df.groupby(by=["Enduser", "Type"])[["Functional Amount(HKD)"]].sum().reset_index().sort_values(by="Functional Amount(HKD)", ascending=False).head(20))
-    customer_type_data["Percentage"] = (customer_type_data["Functional Amount(HKD)"] / customer_type_data.groupby("Enduser")["Functional Amount(HKD)"].transform("sum")) * 100
-    customer_type_data = customer_type_data.groupby("Enduser").apply(lambda x: x.sort_values(by="Percentage", ascending=False).head(5)).reset_index(drop=True)
-    fig_customer_type = px.pie(customer_type_data, values="Percentage", names="Type", color="Type", hole=.3, template="plotly_white")
-    fig_customer_type.update_traces(textposition='inside', textinfo='percent+label')
-    fig_customer_type.update_layout(font=dict(family="Arial", size=15))
-    st.plotly_chart(fig_customer_type, use_container_width=True)
-
-
-
-
-
-
 # Top 20 Customer 買什麼type/ BRAND   
 #👇 Slider for Sales Amount
+
+# PIE CHART Customer Type
+      with right_column:
+          st.subheader(":card_index_dividers: Top 20 Customer :orange[Service Type Percentage]:")
+          customer_type_data = (filtered_df.groupby(by=["Enduser", "TYPE"])[["Functional Amount(HKD)"]].sum().reset_index().sort_values(by="Functional Amount(HKD)", ascending=False).head(20))
+          customer_type_data["Percentage"] = (customer_type_data["Functional Amount(HKD)"] / customer_type_data.groupby("Enduser")["Functional Amount(HKD)"].transform("sum")) * 100
+          customer_type_data = customer_type_data.groupby("Enduser").apply(lambda x: x.sort_values(by="Percentage", ascending=False).head(5)).reset_index(drop=True)
+          fig_customer_type = px.pie(customer_type_data, values="Percentage", names="TYPE", color="TYPE", hole=.3, template="plotly_white")
+          fig_customer_type.update_traces(textposition='outside', textinfo='percent+label')
+          fig_customer_type.update_layout(font=dict(family="Arial", size=15, color="black"),
+                   legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+          st.plotly_chart(fig_customer_type, use_container_width=True)
+
+
+
