@@ -42,7 +42,7 @@ with title_row1:
 with title_row2:
 # 在Streamlit應用程式中顯示縮小後的圖片
 # 加載圖片
-     st.image(resized_image, use_column_width=False, output_format='PNG')
+#     st.image(resized_image, use_column_width=False, output_format='PNG')
 
 #Second PIC
 #image_path2 = '/Users/arthurchan/Downloads/Sample/SERVICE2.png'
@@ -56,7 +56,7 @@ with title_row2:
 with title_row3:
 # 在Streamlit應用程式中顯示縮小後的圖片
 # 加載圖片
-     st.image(resized_image2, use_column_width=False, output_format='PNG')
+#     st.image(resized_image2, use_column_width=False, output_format='PNG')
 
 
 #Move the title higher
