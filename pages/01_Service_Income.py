@@ -192,7 +192,7 @@ filtered_df["INVOICE_MONTH"] = filtered_df["INVOICE_MONTH"].astype(str)
 
 
 st.write(font_css, unsafe_allow_html=True)
-tab1, tab2, tab3 ,tab4,tab5,tab6= st.tabs([":wedding: Overview",":earth_asia: Region",":hammer_and_wrench: SERVICE Type",":books: Brand",":handshake: Customer"])
+tab1, tab2, tab3 ,tab4,tab5= st.tabs([":wedding: Overview",":earth_asia: Region",":hammer_and_wrench: SERVICE Type",":books: Brand",":handshake: Customer"])
 #":memo: Customer& Project"
 #TAB 1: Overall category
 ################################################################################################################################################
