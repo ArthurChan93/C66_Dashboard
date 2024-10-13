@@ -87,7 +87,7 @@ df = pd.read_excel(
 st.sidebar.header(":point_down:Filter:")
 
 # Define sidebar filters and create corresponding DataFrames for each filter
-invoice_fy_filter = st.sidebar.multiselect("INVOICE_FY", df["INVOICE_FY"].unique(),default=["FY23/24"])
+invoice_fy_filter = st.sidebar.multiselect("INVOICE_FY", df["INVOICE_FY"].unique(),default=["FY24/25"])
 df_invoice_fy = df[df["INVOICE_FY"].isin(invoice_fy_filter)]
 
 invoice_yr_filter = st.sidebar.multiselect("INVOICE_YR", df["INVOICE_YR"].unique())
