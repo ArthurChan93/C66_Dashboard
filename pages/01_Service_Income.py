@@ -370,7 +370,7 @@ with tab2:
         with tab2row2two_column:
 # LINE CHART of EAST CHINA FY/FY
               st.divider()
-              st.subheader(":chart_with_upwards_trend: :orange[EAST CHINA] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY)]:")
+              st.subheader(":chart_with_upwards_trend: :orange[EAST CHINA] Inv Amt Trend_MONTHLY:")
               df_Single_region = filtered_df.query('REGION == "EAST"').round(0).groupby(by = ["INVOICE_FY","INVOICE_MONTH"], as_index= False)["Functional Amount(HKD)"].sum()
 # 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
               all_fq_invoice_values = ["4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3"]
@@ -692,7 +692,7 @@ with tab3:
         with tab3row2two_column:
 # LINE CHART of SERVICE_CHARGE FY/FY
               st.divider()
-              st.subheader(":chart_with_upwards_trend: :orange[SERVICE_CHARGE] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY)]:")
+              st.subheader(":chart_with_upwards_trend: :orange[SERVICE_CHARGE] Inv Amt Trend_MONTHLY:")
               df_Single_SERVICE_CHARGE = filtered_df.query('TYPE == "SERVICE_CHARGE"').round(0).groupby(by = ["INVOICE_FY","INVOICE_MONTH"], as_index= False)["Functional Amount(HKD)"].sum()
 # 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_SERVICE_CHARGE 中
               all_fq_invoice_values = ["4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3"]
@@ -1011,7 +1011,7 @@ with tab4:
         with tab4row2two_column:
 # LINE CHART of HELLER FY/FY
               st.divider()
-              st.subheader(":chart_with_upwards_trend: :orange[HELLER] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY)]:")
+              st.subheader(":chart_with_upwards_trend: :orange[HELLER] Inv Amt Trend_MONTHLY:")
               df_Single_HELLER = filtered_df.query('BRAND == "HELLER"').round(0).groupby(by = ["INVOICE_FY","INVOICE_MONTH"], as_index= False)["Functional Amount(HKD)"].sum()
 # 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_HELLER 中
               all_fq_invoice_values = ["4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3"]
