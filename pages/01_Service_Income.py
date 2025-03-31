@@ -257,7 +257,7 @@ with tab2:
         one_column, two_column= st.columns(2)
         with one_column:
 #All Regional total inv amount BAR CHART
-              st.subheader(":bar_chart: Invoice Amount_:orange[FY](Available to show :orange[Multiple FY]):")
+              st.subheader(":bar_chart: Invoice Amount_:orange[FY]:")
               category2_df = filtered_df.round(0).groupby(by=["INVOICE_FY","Branch"], 
                        as_index=False)["Functional Amount(HKD)"].sum().sort_values(by="Functional Amount(HKD)", ascending=False)
               df_contract_vs_invoice = px.bar(category2_df, x="INVOICE_FY", y="Functional Amount(HKD)", color="Branch", text_auto='.3s')
@@ -308,7 +308,7 @@ with tab2:
         with tab2row2one_column:
 # LINE CHART of SOUTH CHINA FY/FY
               st.divider()
-              st.subheader(":chart_with_upwards_trend: :orange[SOUTH CHINA] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY]):")
+              st.subheader(":chart_with_upwards_trend: :orange[SOUTH CHINA] Inv Amt Trend_MONTHLY:")
               df_Single_south = filtered_df.query('REGION == "SOUTH"').round(0).groupby(by = ["INVOICE_FY",
                                  "INVOICE_MONTH"], as_index= False)["Functional Amount(HKD)"].sum()
 # 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
@@ -433,7 +433,7 @@ with tab2:
   
         with three_column:
 # LINE CHART of NORTH CHINA FY/FY
-             st.subheader(":chart_with_upwards_trend: :orange[NORTH CHINA] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY]):")
+             st.subheader(":chart_with_upwards_trend: :orange[NORTH CHINA] Inv Amt Trend_MONTHLY:")
 
              df_Single_north = filtered_df.query('REGION == "NORTH"').round(0).groupby(by=["INVOICE_FY", "INVOICE_MONTH"],
                                 as_index=False)["Functional Amount(HKD)"].sum()
@@ -495,7 +495,7 @@ with tab2:
 ##################################################
         with four_column:
 # LINE CHART of WEST CHINA FY/FY
-             st.subheader(":chart_with_upwards_trend: :orange[WEST CHINA] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY]):")
+             st.subheader(":chart_with_upwards_trend: :orange[WEST CHINA] Inv Amt Trend_MONTHLY:")
              df_Single_west = filtered_df.query('REGION == "WEST"').round(0).groupby(by=["INVOICE_FY", "INVOICE_MONTH"],
                                 as_index=False)["Functional Amount(HKD)"].sum()
 # 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
@@ -583,7 +583,7 @@ with tab3:
         tab3one_column, tab3two_column= st.columns(2)
         with tab3one_column:
 #All Regional total inv amount BAR CHART
-              st.subheader(":bar_chart: Invoice Amount_:orange[FY](Available to show :orange[Multiple FY]):")
+              st.subheader(":bar_chart: Invoice Amount_:orange[FY]:")
               category2_df = filtered_df.round(0).groupby(by=["INVOICE_FY","TYPE"], 
                        as_index=False)["Functional Amount(HKD)"].sum().sort_values(by="Functional Amount(HKD)", ascending=False)
               df_contract_vs_invoice = px.bar(category2_df, x="INVOICE_FY", y="Functional Amount(HKD)", color="TYPE", text_auto='.3s')
@@ -632,7 +632,7 @@ with tab3:
         with tab3row2one_column:
 # LINE CHART of SPARES/OTHER FY/FY
               st.divider()
-              st.subheader(":chart_with_upwards_trend: :orange[SPARES/OTHER] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY]):")
+              st.subheader(":chart_with_upwards_trend: :orange[SPARES/OTHER] Inv Amt Trend_MONTHLY:")
               df_Single_SPARES = filtered_df.query('TYPE == "SPARES/OTHER"').round(0).groupby(by = ["INVOICE_FY",
                                  "INVOICE_MONTH"], as_index= False)["Functional Amount(HKD)"].sum()
 # 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
@@ -755,7 +755,7 @@ with tab3:
   
         with three_column:
 # LINE CHART of CONTRACT_FEE FY/FY
-             st.subheader(":chart_with_upwards_trend: :orange[CONTRACT_FEE] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY]):")
+             st.subheader(":chart_with_upwards_trend: :orange[CONTRACT_FEE] Inv Amt Trend_MONTHLY:")
 
              df_Single_CONTRACT_FEE = filtered_df.query('TYPE == "CONTRACT_FEE"').round(0).groupby(by=["INVOICE_FY", "INVOICE_MONTH"],
                                 as_index=False)["Functional Amount(HKD)"].sum()
@@ -817,7 +817,7 @@ with tab3:
 ##################################################
         with four_column:
 # LINE CHART of FEEDER FY/FY
-             st.subheader(":chart_with_upwards_trend: :orange[FEEDER] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY]):")
+             st.subheader(":chart_with_upwards_trend: :orange[FEEDER] Inv Amt Trend_MONTHLY:")
              df_Single_feeder = filtered_df.query('TYPE == "FEEDER"').round(0).groupby(by=["INVOICE_FY", "INVOICE_MONTH"],
                                 as_index=False)["Functional Amount(HKD)"].sum()
 # 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
@@ -902,7 +902,7 @@ with tab4:
         tab4one_column, tab4two_column= st.columns(2)
         with tab4one_column:
 #All BRAND total inv amount BAR CHART
-              st.subheader(":bar_chart: Invoice Amount_:orange[FY](Available to show :orange[Multiple FY]):")
+              st.subheader(":bar_chart: Invoice Amount_:orange[FY]:")
               category2_df = filtered_df.round(0).groupby(by=["INVOICE_FY","BRAND"], 
                        as_index=False)["Functional Amount(HKD)"].sum().sort_values(by="Functional Amount(HKD)", ascending=False)
               df_contract_vs_invoice = px.bar(category2_df, x="INVOICE_FY", y="Functional Amount(HKD)", color="BRAND", text_auto='.3s')
@@ -951,7 +951,7 @@ with tab4:
         with tab4row2one_column:
 # LINE CHART of YAMAHA FY/FY
               st.divider()
-              st.subheader(":chart_with_upwards_trend: :orange[YAMAHA] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY]):")
+              st.subheader(":chart_with_upwards_trend: :orange[YAMAHA] Inv Amt Trend_MONTHLY:")
               df_Single_YAMAHA = filtered_df.query('BRAND == "YAMAHA"').round(0).groupby(by = ["INVOICE_FY",
                                  "INVOICE_MONTH"], as_index= False)["Functional Amount(HKD)"].sum()
 # 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_brand 中
@@ -1074,7 +1074,7 @@ with tab4:
   
         with three_column:
 # LINE CHART of OTHERS FY/FY
-             st.subheader(":chart_with_upwards_trend: :orange[OTHERS] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY]):")
+             st.subheader(":chart_with_upwards_trend: :orange[OTHERS] Inv Amt Trend_MONTHLY:")
 
              df_Single_OTHERS = filtered_df.query('BRAND == "OTHERS"').round(0).groupby(by=["INVOICE_FY", "INVOICE_MONTH"],
                                 as_index=False)["Functional Amount(HKD)"].sum()
@@ -1136,7 +1136,7 @@ with tab4:
 ##################################################
         with four_column:
 # LINE CHART of PEMTRON FY/FY
-             st.subheader(":chart_with_upwards_trend: :orange[PEMTRON] Inv Amt Trend_MONTHLY(Available to Show :orange[Multiple FY]):")
+             st.subheader(":chart_with_upwards_trend: :orange[PEMTRON] Inv Amt Trend_MONTHLY:")
              df_Single_PEMTRON = filtered_df.query('BRAND == "PEMTRON"').round(0).groupby(by=["INVOICE_FY", "INVOICE_MONTH"],
                                 as_index=False)["Functional Amount(HKD)"].sum()
 # 确保 "INVOICE_FQ" 列中的所有值都出现在 df_Single_region 中
