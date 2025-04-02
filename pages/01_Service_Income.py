@@ -1262,10 +1262,43 @@ with tab5:
           customer_type_data = (filtered_df.groupby(by=["Enduser", "TYPE"])[["Functional Amount(HKD)"]].sum().reset_index().sort_values(by="Functional Amount(HKD)", ascending=False).head(20))
           customer_type_data["Percentage"] = (customer_type_data["Functional Amount(HKD)"] / customer_type_data.groupby("Enduser")["Functional Amount(HKD)"].transform("sum")) * 100
           customer_type_data = customer_type_data.groupby("Enduser").apply(lambda x: x.sort_values(by="Percentage", ascending=False).head(5)).reset_index(drop=True)
-          fig_customer_type = px.pie(customer_type_data, values="Percentage", names="TYPE", color="TYPE", hole=.3, template="plotly_white")
-          fig_customer_type.update_traces(textposition='outside', textinfo='percent+label')
-          fig_customer_type.update_layout(font=dict(family="Arial", size=15, color="black"),
-                   legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+
+          # 定義特定服務類型顏色映射
+          service_colors = {
+              "SERVICE_CHARGE": "#FF0000",    # 紅色
+              "FEEDER": "#00FF00",            # 綠色
+              "SPARES/OTHER": "#0000FF",      # 藍色
+              "CONTRACT_FEE": "#800080"       # 紫色
+          }
+
+          # 創建餅圖並指定顏色
+          fig_customer_type = px.pie(
+              customer_type_data,
+              values="Percentage",
+              names="TYPE",
+              color="TYPE",
+              color_discrete_map=service_colors,  # 套用自訂顏色
+              hole=.3,
+              template="plotly_white"
+          )
+
+          # 保持原有樣式設定
+          fig_customer_type.update_traces(
+              textposition='outside',
+              textinfo='percent+label'
+          )
+          
+          fig_customer_type.update_layout(
+              font=dict(family="Arial", size=15, color="black"),
+              legend=dict(
+                  orientation="h",
+                  yanchor="bottom",
+                  y=1.02,
+                  xanchor="right",
+                  x=1
+              )
+          )
+          
           st.plotly_chart(fig_customer_type, use_container_width=True)
 
 
